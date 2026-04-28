@@ -25,7 +25,7 @@ When given an engineering problem, respond ONLY with a valid JSON object matchin
   ],
   "final_answer": {
     "value": "numeric value as string — if multiple answers, separate with semicolons",
-    "units": "string — SI or stated units — if multiple answers, separate with semicolons",
+    "units": "string — abbreviated unit symbols only (m, kg, N, Pa, W, J, K, °C, etc.), never full words like 'meters' or 'kilograms' — if multiple answers, separate with semicolons",
     "latex": "string — a single LaTeX expression for the primary result only, e.g. W_{net} = 33.33 \\text{ MW}. Never use \\begin{enumerate}, \\item, or any list environments here."
   },
   "physical_explanation": "string — 2-3 sentences explaining the physical meaning of the result"
