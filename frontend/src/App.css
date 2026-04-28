@@ -271,6 +271,12 @@ li { margin-bottom: 0.35rem; font-size: 0.95rem; color: #e2e8f0; }
   overflow-x: auto;
   overflow-y: hidden;
   padding-bottom: 0.25rem;
+  max-width: 100%;
+}
+
+.katex-display > .katex {
+  max-width: 100%;
+  white-space: normal;
 }
 
 /* Error */

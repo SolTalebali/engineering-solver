@@ -207,7 +207,7 @@ function App() {
                     {solution.formulas.map((f, i) => (
                       <div key={i} className="formula">
                         <p>{f.description}</p>
-                        <BlockMath math={stripDelimiters(f.latex)} />
+                        <BlockMath math={stripDelimiters(f.latex)} renderError={() => null} />
                       </div>
                     ))}
                   </div>
@@ -217,14 +217,14 @@ function App() {
                     {solution.steps.map((step) => (
                       <div key={step.step_number} className="step">
                         <p><span className="step-number">Step {step.step_number}:</span> {step.description}</p>
-                        {step.latex && <BlockMath math={stripDelimiters(step.latex)} />}
+                        {step.latex && <BlockMath math={stripDelimiters(step.latex)} renderError={() => null} />}
                       </div>
                     ))}
                   </div>
 
                   <div className="section-card">
                     <h3>Final Answer</h3>
-                    <BlockMath math={stripDelimiters(solution.final_answer.latex)} />
+                    <BlockMath math={stripDelimiters(solution.final_answer.latex)} renderError={() => null} />
                     {solution.final_answer.value.includes(';')
                       ? solution.final_answer.value.split(';').map((val, i) => {
                           const unit = (solution.final_answer.units.split(';')[i] || '').trim()
