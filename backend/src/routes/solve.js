@@ -15,7 +15,11 @@ router.post('/', async (req, res) => {
     res.json(solution);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Failed to solve problem. Please try again.' });
+    const is503 = err.message && err.message.includes('503');
+    const message = is503
+      ? 'The solver is experiencing high demand right now. Please wait a moment and try again.'
+      : 'Failed to solve problem. Please try again.';
+    res.status(500).json({ error: message });
   }
 });
 
