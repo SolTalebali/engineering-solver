@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { BlockMath, InlineMath } from 'react-katex'
+import { BlockMath } from 'react-katex'
 import 'katex/dist/katex.min.css'
 import './App.css'
 
@@ -34,70 +34,83 @@ function App() {
   }
 
   return (
-    <div className="container">
-      <h1>Engineering Problem Solver</h1>
-      <p className="subtitle">Heat Transfer · Statics · Fluid Mechanics</p>
-
-      <form onSubmit={handleSubmit}>
-        <textarea
-          value={problem}
-          onChange={(e) => setProblem(e.target.value)}
-          placeholder="Describe your engineering problem..."
-          rows={4}
-        />
-        <button type="submit" disabled={loading || !problem.trim()}>
-          {loading ? 'Solving...' : 'Solve'}
-        </button>
-      </form>
-
-      {error && <p className="error">{error}</p>}
-
-      {solution && (
-        <div className="solution">
-          <h2>{solution.problem_type}</h2>
-
-          <section>
-            <h3>Given Values</h3>
-            <ul>
-              {Object.entries(solution.given_values).map(([key, value]) => (
-                <li key={key}><strong>{key}:</strong> {value}</li>
-              ))}
-            </ul>
-          </section>
-
-          <section>
-            <h3>Formulas</h3>
-            {solution.formulas.map((f, i) => (
-              <div key={i} className="formula">
-                <p>{f.description}</p>
-                <BlockMath math={f.latex} />
-              </div>
-            ))}
-          </section>
-
-          <section>
-            <h3>Step-by-Step Solution</h3>
-            {solution.steps.map((step) => (
-              <div key={step.step_number} className="step">
-                <p><strong>Step {step.step_number}:</strong> {step.description}</p>
-                {step.latex && <BlockMath math={step.latex} />}
-              </div>
-            ))}
-          </section>
-
-          <section>
-            <h3>Final Answer</h3>
-            <BlockMath math={solution.final_answer.latex} />
-            <p>{solution.final_answer.value} {solution.final_answer.units}</p>
-          </section>
-
-          <section>
-            <h3>Physical Explanation</h3>
-            <p>{solution.physical_explanation}</p>
-          </section>
+    <>
+      <div className="header">
+        <div className="title-box">
+          <h1>Engineering Problem Solver</h1>
         </div>
-      )}
-    </div>
+        <p className="subtitle">Heat Transfer · Statics · Fluid Mechanics · Thermodynamics</p>
+      </div>
+
+      <div className="main">
+        <div className="form-card">
+          <form onSubmit={handleSubmit}>
+            <textarea
+              value={problem}
+              onChange={(e) => setProblem(e.target.value)}
+              placeholder="Type your engineering problem here..."
+              rows={4}
+            />
+            <p className="instructions">
+              Describe your problem in plain English — include any <span>known values and units</span>.
+              The solver will identify the problem type, apply the relevant formulas, and walk you through
+              a full step-by-step solution with rendered equations.
+            </p>
+            <button type="submit" disabled={loading || !problem.trim()}>
+              {loading ? 'Solving...' : 'Solve Problem'}
+            </button>
+          </form>
+        </div>
+
+        {error && <p className="error">{error}</p>}
+
+        {solution && (
+          <div className="solution">
+            <h2>{solution.problem_type}</h2>
+
+            <div className="section-card">
+              <h3>Given Values</h3>
+              <ul>
+                {Object.entries(solution.given_values).map(([key, value]) => (
+                  <li key={key}><strong>{key}:</strong> {value}</li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="section-card">
+              <h3>Formulas</h3>
+              {solution.formulas.map((f, i) => (
+                <div key={i} className="formula">
+                  <p>{f.description}</p>
+                  <BlockMath math={f.latex} />
+                </div>
+              ))}
+            </div>
+
+            <div className="section-card">
+              <h3>Step-by-Step Solution</h3>
+              {solution.steps.map((step) => (
+                <div key={step.step_number} className="step">
+                  <p><span className="step-number">Step {step.step_number}:</span> {step.description}</p>
+                  {step.latex && <BlockMath math={step.latex} />}
+                </div>
+              ))}
+            </div>
+
+            <div className="section-card">
+              <h3>Final Answer</h3>
+              <BlockMath math={solution.final_answer.latex} />
+              <p className="final-answer-value">{solution.final_answer.value} {solution.final_answer.units}</p>
+            </div>
+
+            <div className="section-card">
+              <h3>Physical Explanation</h3>
+              <p className="physical-explanation">{solution.physical_explanation}</p>
+            </div>
+          </div>
+        )}
+      </div>
+    </>
   )
 }
 
