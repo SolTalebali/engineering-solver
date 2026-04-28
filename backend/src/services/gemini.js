@@ -35,6 +35,8 @@ Important rules:
 - Do not include $ delimiters inside any latex string value — write raw LaTeX only.
 - The final_answer.latex must be a single equation, never a list.
 - Step description strings must be plain text only — no inline $ math.
+- Round all final numerical answers to 2 decimal places. Do not report more precision than this.
+- When the problem has multiple final answers, label each value clearly in final_answer.value using the format "Label: value" separated by semicolons, e.g. "Net power output: 32.75; Thermal efficiency: 39.10; Heat input: 89.83". Do the same for units.
 - Do not include any text outside the JSON object.`;
 
 async function solveEngineeringProblem(problem) {

@@ -5,6 +5,11 @@ import './App.css'
 
 const API_URL = 'https://engineering-solver-backend.onrender.com/solve'
 
+function stripDelimiters(latex) {
+  if (!latex) return ''
+  return latex.replace(/^\$\$?([\s\S]*?)\$\$?$/, '$1').trim()
+}
+
 function App() {
   const [problem, setProblem] = useState('')
   const [solution, setSolution] = useState(null)
@@ -82,7 +87,7 @@ function App() {
               {solution.formulas.map((f, i) => (
                 <div key={i} className="formula">
                   <p>{f.description}</p>
-                  <BlockMath math={f.latex} />
+                  <BlockMath math={stripDelimiters(f.latex)} />
                 </div>
               ))}
             </div>
@@ -92,15 +97,25 @@ function App() {
               {solution.steps.map((step) => (
                 <div key={step.step_number} className="step">
                   <p><span className="step-number">Step {step.step_number}:</span> {step.description}</p>
-                  {step.latex && <BlockMath math={step.latex} />}
+                  {step.latex && <BlockMath math={stripDelimiters(step.latex)} />}
                 </div>
               ))}
             </div>
 
             <div className="section-card">
               <h3>Final Answer</h3>
-              <BlockMath math={solution.final_answer.latex} />
-              <p className="final-answer-value">{solution.final_answer.value} {solution.final_answer.units}</p>
+              <BlockMath math={stripDelimiters(solution.final_answer.latex)} />
+              {solution.final_answer.value.includes(';')
+                ? solution.final_answer.value.split(';').map((val, i) => {
+                    const unit = (solution.final_answer.units.split(';')[i] || '').trim()
+                    return (
+                      <p key={i} className="final-answer-value">
+                        {val.trim()} {unit}
+                      </p>
+                    )
+                  })
+                : <p className="final-answer-value">{solution.final_answer.value} {solution.final_answer.units}</p>
+              }
             </div>
 
             <div className="section-card">
