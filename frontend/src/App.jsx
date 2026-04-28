@@ -85,6 +85,18 @@ function App() {
     setActiveId(entry.id)
   }
 
+  function handleDeleteEntry(e, id) {
+    e.stopPropagation()
+    const updated = history.filter(h => h.id !== id)
+    setHistory(updated)
+    if (activeId === id) {
+      setActiveId(null)
+      setSolution(null)
+      setProblem('')
+    }
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(updated))
+  }
+
   function handleClearHistory() {
     setHistory([])
     setActiveId(null)
@@ -148,14 +160,17 @@ function App() {
             <p className="sidebar-empty">No history yet.</p>
           ) : (
             history.map(entry => (
-              <button
+              <div
                 key={entry.id}
                 className={`history-entry ${activeId === entry.id ? 'history-entry-active' : ''}`}
                 onClick={() => handleHistoryClick(entry)}
               >
                 <span className="entry-problem">{truncate(entry.problem, 45)}</span>
-                <span className="entry-time">{formatTime(entry.timestamp)}</span>
-              </button>
+                <div className="entry-footer">
+                  <span className="entry-time">{formatTime(entry.timestamp)}</span>
+                  <button className="delete-entry-btn" onClick={(e) => handleDeleteEntry(e, entry.id)} aria-label="Delete">×</button>
+                </div>
+              </div>
             ))
           )}
         </div>
@@ -166,13 +181,15 @@ function App() {
       )}
 
       <div className="main-wrapper">
-        <button
-          className="sidebar-toggle"
-          onClick={() => setSidebarOpen(o => !o)}
-          aria-label="Toggle history"
-        >
-          ☰
-        </button>
+        <div className="topbar">
+          <button
+            className="history-toggle-btn"
+            onClick={() => setSidebarOpen(o => !o)}
+            aria-label="Toggle history"
+          >
+            ☰ History
+          </button>
+        </div>
 
         <div className="main">
           {!solution && !loading && !error && (
