@@ -163,6 +163,13 @@ li {
   border-radius: 8px;
   padding: 1rem 1.25rem;
   margin-bottom: 0.75rem;
+  overflow-x: auto;
+}
+
+.katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 0.25rem;
 }
 
 .formula p, .step p {

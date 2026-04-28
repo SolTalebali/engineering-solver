@@ -24,14 +24,18 @@ When given an engineering problem, respond ONLY with a valid JSON object matchin
     }
   ],
   "final_answer": {
-    "value": "numeric value as string",
-    "units": "string — SI or stated units",
-    "latex": "string — final result in LaTeX"
+    "value": "numeric value as string — if multiple answers, separate with semicolons",
+    "units": "string — SI or stated units — if multiple answers, separate with semicolons",
+    "latex": "string — a single LaTeX expression for the primary result only, e.g. W_{net} = 33.33 \\text{ MW}. Never use \\begin{enumerate}, \\item, or any list environments here."
   },
   "physical_explanation": "string — 2-3 sentences explaining the physical meaning of the result"
 }
 
-Do not include any text outside the JSON object.`;
+Important rules:
+- Do not include $ delimiters inside any latex string value — write raw LaTeX only.
+- The final_answer.latex must be a single equation, never a list.
+- Step description strings must be plain text only — no inline $ math.
+- Do not include any text outside the JSON object.`;
 
 async function solveEngineeringProblem(problem) {
   const model = genAI.getGenerativeModel({
