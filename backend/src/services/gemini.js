@@ -39,6 +39,8 @@ Important rules:
 - When the problem has multiple final answers, label each value clearly in final_answer.value using the format "Label: value" separated by semicolons, e.g. "Net power output: 32.75; Thermal efficiency: 39.10; Heat input: 89.83". Do the same for units.
 - Do not include any text outside the JSON object.`;
 
+const RETRY_DELAYS = [2000, 5000, 10000]; // ms between attempts 2, 3, 4
+
 async function solveEngineeringProblem(problem) {
   const model = genAI.getGenerativeModel({
     model: 'gemini-2.5-flash',
@@ -47,9 +49,20 @@ async function solveEngineeringProblem(problem) {
     },
   });
 
-  const result = await model.generateContent(`${SYSTEM_PROMPT}\n\nProblem: ${problem}`);
-  const text = result.response.text();
-  return JSON.parse(text);
+  let lastError;
+  for (let attempt = 0; attempt <= RETRY_DELAYS.length; attempt++) {
+    try {
+      const result = await model.generateContent(`${SYSTEM_PROMPT}\n\nProblem: ${problem}`);
+      const text = result.response.text();
+      return JSON.parse(text);
+    } catch (err) {
+      lastError = err;
+      const is503 = err.message && err.message.includes('503');
+      if (!is503 || attempt === RETRY_DELAYS.length) throw err;
+      await new Promise(res => setTimeout(res, RETRY_DELAYS[attempt]));
+    }
+  }
+  throw lastError;
 }
 
 module.exports = { solveEngineeringProblem };
