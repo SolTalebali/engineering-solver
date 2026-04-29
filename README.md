@@ -1,10 +1,30 @@
 # Engineering Problem Solver
 
-An AI-powered web app that solves mechanical engineering problems step by step. Enter a problem in plain English and get back a structured solution with formulas, step-by-step workings, rendered equations, and a physical explanation.
+An AI-powered web app that solves mechanical engineering problems step by step. Describe a problem in plain English and get back a structured solution with formulas, worked calculations, rendered equations, and a physical explanation.
 
-**Live Demo:** [engineering-solver.vercel.app](https://engineering-solver.vercel.app)
+**Live:** [engineering-solver.vercel.app](https://engineering-solver.vercel.app)
+
+![Hero](./docs/screenshots/01-hero.png)
 
 ---
+
+## Features
+
+- **Structured solutions** — given values, relevant formulas, step-by-step working, final answer, and a physical explanation
+- **Equation rendering** — LaTeX equations rendered with KaTeX in every section
+- **Chat history** — past solutions saved locally in the browser, with per-entry delete and a clear-all option (no account needed)
+- **Resilient to API hiccups** — automatic retry with exponential backoff on Gemini 503s, with a clear "high demand" message if all retries fail
+- **Out-of-scope handling** — empty / N/A sections are silently skipped so the response stays clean
+- **Responsive dark UI** — auto-expanding textarea, neon accents per section, mobile-friendly layout
+
+## Screenshots
+
+A worked Carnot cycle problem and the history sidebar:
+
+<p align="center">
+  <img src="./docs/screenshots/02-solution.png" width="49%" alt="Solved problem" />
+  <img src="./docs/screenshots/03-history.png" width="49%" alt="History sidebar" />
+</p>
 
 ## Supported Topics
 
@@ -14,12 +34,20 @@ An AI-powered web app that solves mechanical engineering problems step by step. 
 - Thermodynamics
 - Dynamics
 
+## How It Works
+
+1. The frontend sends the user's plain-English problem to the backend over a single `POST /solve` endpoint.
+2. The backend wraps the problem in a strict system prompt and calls **Gemini 2.5 Flash** with `responseMimeType: application/json`, forcing a structured response.
+3. If Gemini returns a 503 (high demand), the backend transparently retries up to three times with 2s / 5s / 10s backoff before surfacing a friendly error.
+4. The frontend parses the JSON, applies a `roundNumbers()` safety net to enforce 2dp on the final answer, and renders each section as a colored card with KaTeX-rendered math.
+5. Successful solutions are stored in `localStorage` so the user can revisit them instantly without spending another API call.
+
 ## Tech Stack
 
 | Layer | Technology |
 |---|---|
 | Frontend | React + Vite |
-| Equation Rendering | KaTeX |
+| Equation Rendering | KaTeX (via `react-katex`) |
 | Backend | Node.js + Express |
 | AI | Google Gemini 2.5 Flash |
 | Frontend Hosting | Vercel |
@@ -29,20 +57,24 @@ An AI-powered web app that solves mechanical engineering problems step by step. 
 
 ```
 engineering-solver/
-├── frontend/         # React app
+├── frontend/              # React app
 │   └── src/
 │       ├── App.jsx
 │       └── App.css
-└── backend/          # Express API
-    └── src/
-        ├── index.js
-        ├── routes/
-        │   └── solve.js
-        └── services/
-            └── gemini.js
+├── backend/               # Express API
+│   └── src/
+│       ├── index.js
+│       ├── routes/
+│       │   └── solve.js
+│       └── services/
+│           └── gemini.js
+└── docs/
+    └── screenshots/
 ```
 
 ## Running Locally
+
+The frontend and backend are separate servers — both need to run.
 
 ### Backend
 
@@ -85,7 +117,7 @@ App runs at `http://localhost:5173`.
 Request:
 ```json
 {
-  "problem": "A steel plate 10mm thick with thermal conductivity 50 W/mK has one side at 200°C and the other at 50°C. Find the heat flux."
+  "problem": "A steel plate 10 mm thick with thermal conductivity 50 W/m·K has one side at 200 °C and the other at 50 °C. Find the heat flux."
 }
 ```
 
@@ -93,10 +125,30 @@ Response:
 ```json
 {
   "problem_type": "Heat Transfer",
-  "given_values": { ... },
-  "formulas": [ { "description": "...", "latex": "..." } ],
-  "steps": [ { "step_number": 1, "description": "...", "latex": "..." } ],
-  "final_answer": { "value": "750000", "units": "W/m²", "latex": "..." },
+  "given_values": {
+    "Thickness": "10 mm",
+    "k": "50 W/m·K",
+    "T1": "200 °C",
+    "T2": "50 °C"
+  },
+  "formulas": [
+    { "description": "Fourier's Law of Conduction", "latex": "q = -k \\frac{dT}{dx}" }
+  ],
+  "steps": [
+    { "step_number": 1, "description": "Compute the temperature gradient.", "latex": "..." }
+  ],
+  "final_answer": {
+    "value": "750000",
+    "units": "W/m²",
+    "latex": "q = 7.5 \\times 10^5 \\text{ W/m}^2"
+  },
   "physical_explanation": "..."
 }
 ```
+
+## Notes & Limitations
+
+- The deployed backend uses Gemini's free tier, so high-demand 503 errors do happen during peak hours despite the retry logic. Trying again a moment later usually succeeds.
+- Solutions are AI-generated and best treated as a study aid — sanity-check the formulas and numerical answers against your own work before relying on them.
+- The app is targeted at undergraduate-level mechanical engineering problems. Out-of-scope questions (e.g. "solve world hunger") are detected and answered with just a Physical Explanation note.
+- Chat history is stored in `localStorage` only — it is not synced across devices and clearing browser data wipes it.
