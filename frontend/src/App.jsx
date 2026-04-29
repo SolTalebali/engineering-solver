@@ -206,57 +206,72 @@ function App() {
             <div className="solution" ref={solutionRef}>
               {loading && <p className="loading-text">Solving your problem...</p>}
 
-              {solution && (
-                <>
-                  <h2>{solution.problem_type}</h2>
+              {solution && (() => {
+                const hasGiven = solution.given_values && Object.keys(solution.given_values).length > 0
+                const hasFormulas = solution.formulas && solution.formulas.length > 0
+                const hasSteps = solution.steps && solution.steps.length > 0
+                const answerValue = solution.final_answer?.value?.trim()
+                const hasFinalAnswer = answerValue && answerValue.toLowerCase() !== 'n/a'
+                return (
+                  <>
+                    <h2>{solution.problem_type}</h2>
 
-                  <div className="section-card">
-                    <h3>Given Values</h3>
-                    <ul>
-                      {Object.entries(solution.given_values).map(([key, value]) => (
-                        <li key={key}><strong>{key}:</strong> {value}</li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <div className="section-card">
-                    <h3>Formulas</h3>
-                    {solution.formulas.map((f, i) => (
-                      <div key={i} className="formula">
-                        <p>{f.description}</p>
-                        <BlockMath math={stripDelimiters(f.latex)} renderError={() => null} />
+                    {hasGiven && (
+                      <div className="section-card">
+                        <h3>Given Values</h3>
+                        <ul>
+                          {Object.entries(solution.given_values).map(([key, value]) => (
+                            <li key={key}><strong>{key}:</strong> {value}</li>
+                          ))}
+                        </ul>
                       </div>
-                    ))}
-                  </div>
+                    )}
 
-                  <div className="section-card">
-                    <h3>Step-by-Step Solution</h3>
-                    {solution.steps.map((step) => (
-                      <div key={step.step_number} className="step">
-                        <p><span className="step-number">Step {step.step_number}:</span> {step.description}</p>
-                        {step.latex && <BlockMath math={stripDelimiters(step.latex)} renderError={() => null} />}
+                    {hasFormulas && (
+                      <div className="section-card">
+                        <h3>Formulas</h3>
+                        {solution.formulas.map((f, i) => (
+                          <div key={i} className="formula">
+                            <p>{f.description}</p>
+                            <BlockMath math={stripDelimiters(f.latex)} renderError={() => null} />
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
+                    )}
 
-                  <div className="section-card">
-                    <h3>Final Answer</h3>
-                    <BlockMath math={stripDelimiters(solution.final_answer.latex)} renderError={() => null} />
-                    {solution.final_answer.value.includes(';')
-                      ? solution.final_answer.value.split(';').map((val, i) => {
-                          const unit = (solution.final_answer.units.split(';')[i] || '').trim()
-                          return <p key={i} className="final-answer-value">{roundNumbers(val.trim())} {unit}</p>
-                        })
-                      : <p className="final-answer-value">{roundNumbers(solution.final_answer.value)} {solution.final_answer.units}</p>
-                    }
-                  </div>
+                    {hasSteps && (
+                      <div className="section-card">
+                        <h3>Step-by-Step Solution</h3>
+                        {solution.steps.map((step) => (
+                          <div key={step.step_number} className="step">
+                            <p><span className="step-number">Step {step.step_number}:</span> {step.description}</p>
+                            {step.latex && <BlockMath math={stripDelimiters(step.latex)} renderError={() => null} />}
+                          </div>
+                        ))}
+                      </div>
+                    )}
 
-                  <div className="section-card">
-                    <h3>Physical Explanation</h3>
-                    <p className="physical-explanation">{solution.physical_explanation}</p>
-                  </div>
-                </>
-              )}
+                    {hasFinalAnswer && (
+                      <div className="section-card">
+                        <h3>Final Answer</h3>
+                        <BlockMath math={stripDelimiters(solution.final_answer.latex)} renderError={() => null} />
+                        {solution.final_answer.value.includes(';')
+                          ? solution.final_answer.value.split(';').map((val, i) => {
+                              const unit = (solution.final_answer.units.split(';')[i] || '').trim()
+                              return <p key={i} className="final-answer-value">{roundNumbers(val.trim())} {unit}</p>
+                            })
+                          : <p className="final-answer-value">{roundNumbers(solution.final_answer.value)} {solution.final_answer.units}</p>
+                        }
+                      </div>
+                    )}
+
+                    <div className="section-card">
+                      <h3>Physical Explanation</h3>
+                      <p className="physical-explanation">{solution.physical_explanation}</p>
+                    </div>
+                  </>
+                )
+              })()}
             </div>
           )}
         </div>
@@ -275,13 +290,15 @@ function App() {
               {loading ? '...' : '↑'}
             </button>
           </form>
-          <div className="chips">
-            {CHIPS.map((chip) => (
-              <button key={chip} className="chip" onClick={() => handleChip(chip)}>
-                {chip}
-              </button>
-            ))}
-          </div>
+          {!solution && !loading && (
+            <div className="chips">
+              {CHIPS.map((chip) => (
+                <button key={chip} className="chip" onClick={() => handleChip(chip)}>
+                  {chip}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
