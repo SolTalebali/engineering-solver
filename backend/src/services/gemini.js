@@ -39,26 +39,35 @@ Important rules:
 - When the problem has multiple final answers, label each value clearly in final_answer.value using the format "Label: value" separated by semicolons, e.g. "Net power output: 32.75; Thermal efficiency: 39.10; Heat input: 89.83". Do the same for units.
 - Do not include any text outside the JSON object.`;
 
-const RETRY_DELAYS = [2000, 5000, 10000]; // ms between attempts 2, 3, 4
+const MODEL_CHAIN = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
+const RETRY_DELAYS = [2000, 5000, 10000]; // backoff between full-chain retries
+
+async function tryModel(modelName, problem) {
+  const model = genAI.getGenerativeModel({
+    model: modelName,
+    generationConfig: { responseMimeType: 'application/json' },
+  });
+  const result = await model.generateContent(`${SYSTEM_PROMPT}\n\nProblem: ${problem}`);
+  return JSON.parse(result.response.text());
+}
 
 async function solveEngineeringProblem(problem) {
-  const model = genAI.getGenerativeModel({
-    model: 'gemini-2.5-flash',
-    generationConfig: {
-      responseMimeType: 'application/json',
-    },
-  });
-
   let lastError;
   for (let attempt = 0; attempt <= RETRY_DELAYS.length; attempt++) {
-    try {
-      const result = await model.generateContent(`${SYSTEM_PROMPT}\n\nProblem: ${problem}`);
-      const text = result.response.text();
-      return JSON.parse(text);
-    } catch (err) {
-      lastError = err;
-      const is503 = err.message && err.message.includes('503');
-      if (!is503 || attempt === RETRY_DELAYS.length) throw err;
+    for (const modelName of MODEL_CHAIN) {
+      try {
+        const solution = await tryModel(modelName, problem);
+        if (modelName !== MODEL_CHAIN[0]) {
+          console.log(`Served via fallback model: ${modelName}`);
+        }
+        return solution;
+      } catch (err) {
+        lastError = err;
+        const is503 = err.message && err.message.includes('503');
+        if (!is503) throw err;
+      }
+    }
+    if (attempt < RETRY_DELAYS.length) {
       await new Promise(res => setTimeout(res, RETRY_DELAYS[attempt]));
     }
   }

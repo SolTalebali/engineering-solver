@@ -48,6 +48,8 @@ function loadHistory() {
   }
 }
 
+const RETRY_COUNTDOWN_SECONDS = 20
+
 function App() {
   const [problem, setProblem] = useState('')
   const [solution, setSolution] = useState(null)
@@ -56,14 +58,29 @@ function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [history, setHistory] = useState(loadHistory)
   const [activeId, setActiveId] = useState(null)
+  const [retryCountdown, setRetryCountdown] = useState(null)
+  const [autoRetryFired, setAutoRetryFired] = useState(false)
   const textareaRef = useRef(null)
   const solutionRef = useRef(null)
+  const submitRef = useRef(null)
 
   useEffect(() => {
     if (solution && solutionRef.current) {
       solutionRef.current.scrollIntoView({ behavior: 'smooth' })
     }
   }, [solution])
+
+  useEffect(() => {
+    if (retryCountdown === null) return
+    if (retryCountdown === 0) {
+      setRetryCountdown(null)
+      setAutoRetryFired(true)
+      submitRef.current?.(true)
+      return
+    }
+    const t = setTimeout(() => setRetryCountdown(c => c - 1), 1000)
+    return () => clearTimeout(t)
+  }, [retryCountdown])
 
   function saveToHistory(prob, sol) {
     const entry = {
@@ -103,13 +120,14 @@ function App() {
     localStorage.removeItem(HISTORY_KEY)
   }
 
-  async function handleSubmit(e) {
-    e.preventDefault()
+  async function submitProblem(isRetry = false) {
     if (!problem.trim()) return
     setLoading(true)
     setError(null)
     setSolution(null)
     setActiveId(null)
+    setRetryCountdown(null)
+    if (!isRetry) setAutoRetryFired(false)
 
     try {
       const res = await fetch(API_URL, {
@@ -118,14 +136,32 @@ function App() {
         body: JSON.stringify({ problem }),
       })
       const data = await res.json()
-      if (!res.ok) throw new Error(data.error)
+      if (!res.ok) {
+        setError(data.error || 'Failed to solve problem.')
+        if (data.retryable && !isRetry && !autoRetryFired) {
+          setRetryCountdown(RETRY_COUNTDOWN_SECONDS)
+        }
+        return
+      }
       setSolution(data)
       saveToHistory(problem.trim(), data)
     } catch (err) {
-      setError(err.message)
+      setError(err.message || 'Network error. Please try again.')
     } finally {
       setLoading(false)
     }
+  }
+
+  submitRef.current = submitProblem
+
+  function handleSubmit(e) {
+    e.preventDefault()
+    submitProblem(false)
+  }
+
+  function handleCancelRetry() {
+    setRetryCountdown(null)
+    setAutoRetryFired(true)
   }
 
   function handleKeyDown(e) {
@@ -200,7 +236,17 @@ function App() {
             </div>
           )}
 
-          {error && <p className="error">{error}</p>}
+          {error && (
+            <div className="error-block">
+              <p className="error">{error}</p>
+              {retryCountdown !== null && (
+                <div className="retry-info">
+                  <span>Retrying in {retryCountdown}s…</span>
+                  <button className="retry-cancel-btn" onClick={handleCancelRetry}>Cancel</button>
+                </div>
+              )}
+            </div>
+          )}
 
           {(solution || loading) && (
             <div className="solution" ref={solutionRef}>

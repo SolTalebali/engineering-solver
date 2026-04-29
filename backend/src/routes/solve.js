@@ -19,7 +19,7 @@ router.post('/', async (req, res) => {
     const message = is503
       ? 'The solver is experiencing high demand right now. Please wait a moment and try again.'
       : 'Failed to solve problem. Please try again.';
-    res.status(500).json({ error: message });
+    res.status(500).json({ error: message, retryable: is503 });
   }
 });
 
