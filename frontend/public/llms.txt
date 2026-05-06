@@ -6,9 +6,9 @@ Rho takes a mechanical engineering problem in plain English (heat transfer, stat
 
 ## Live URLs
 
-- App: https://engineering-solver.vercel.app
+- App: https://rho-engineering.vercel.app
 - API: https://engineering-solver-backend.onrender.com/solve
-- Source: https://github.com/SolTalebali/engineering-solver
+- Source: https://github.com/SolTalebali/rho-engineering-solver
 
 ## API
 

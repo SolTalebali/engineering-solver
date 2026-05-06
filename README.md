@@ -2,7 +2,7 @@
 
 An AI-powered web app that solves mechanical engineering problems step by step. Describe a problem in plain English and get back a structured solution with formulas, worked calculations, rendered equations, and a physical explanation.
 
-**Live:** [engineering-solver.vercel.app](https://engineering-solver.vercel.app)
+**Live:** [rho-engineering.vercel.app](https://rho-engineering.vercel.app)
 
 ![Hero](./docs/screenshots/01-hero.png)
 
@@ -56,7 +56,7 @@ A worked Carnot cycle problem and the history sidebar:
 ## Project Structure
 
 ```
-engineering-solver/
+rho-engineering-solver/
 ├── frontend/              # React app
 │   └── src/
 │       ├── App.jsx
