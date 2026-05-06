@@ -182,6 +182,17 @@ function App() {
     textareaRef.current?.focus()
   }
 
+  function handleHome() {
+    setProblem('')
+    setSolution(null)
+    setError(null)
+    setLoading(false)
+    setActiveId(null)
+    setRetryCountdown(null)
+    setAutoRetryFired(false)
+    if (textareaRef.current) textareaRef.current.style.height = 'auto'
+  }
+
   return (
     <div className="app">
       <div className={`sidebar ${sidebarOpen ? 'sidebar-open' : ''}`}>
@@ -224,6 +235,13 @@ function App() {
             aria-label="Toggle history"
           >
             ☰ History
+          </button>
+          <button
+            className="history-toggle-btn home-btn"
+            onClick={handleHome}
+            aria-label="Home"
+          >
+            ⌂ Home
           </button>
         </div>
 

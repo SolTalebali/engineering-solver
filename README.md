@@ -13,7 +13,7 @@ An AI-powered web app that solves mechanical engineering problems step by step. 
 - **Structured solutions** — given values, relevant formulas, step-by-step working, final answer, and a physical explanation
 - **Equation rendering** — LaTeX equations rendered with KaTeX in every section
 - **Chat history** — past solutions saved locally in the browser, with per-entry delete and a clear-all option (no account needed)
-- **Resilient to API hiccups** — model fallback chain (2.5 Flash → 2.0 Flash → 1.5 Flash) with exponential-backoff retries on Gemini 503s, plus a frontend auto-retry countdown so the user doesn't have to manually click "try again"
+- **Resilient to API hiccups** — model fallback chain (2.5 Flash → 2.5 Flash-Lite → 2.5 Pro) with exponential-backoff retries on transient Gemini errors (404/429/503), plus a frontend auto-retry countdown so the user doesn't have to manually click "try again"
 - **Out-of-scope handling** — empty / N/A sections are silently skipped so the response stays clean
 - **Responsive dark UI** — auto-expanding textarea, neon accents per section, mobile-friendly layout
 
@@ -38,7 +38,7 @@ A worked Carnot cycle problem and the history sidebar:
 
 1. The frontend sends the user's plain-English problem to the backend over a single `POST /solve` endpoint.
 2. The backend wraps the problem in a strict system prompt and calls **Gemini 2.5 Flash** with `responseMimeType: application/json`, forcing a structured response.
-3. If Gemini returns a 503 (high demand), the backend transparently falls back through a chain of models (`gemini-2.5-flash` → `gemini-2.0-flash` → `gemini-1.5-flash`) and retries the chain up to three times with 2s / 5s / 10s backoff. If everything fails, the response carries `retryable: true` and the frontend starts a 20-second auto-retry countdown so the user doesn't have to manually click "try again".
+3. If a model is unavailable (404), rate-limited (429), or overloaded (503), the backend transparently falls back through a chain of models (`gemini-2.5-flash` → `gemini-2.5-flash-lite` → `gemini-2.5-pro`) and retries the chain up to three times with 2s / 5s / 10s backoff. If everything fails, the response carries `retryable: true` and the frontend starts a 20-second auto-retry countdown so the user doesn't have to manually click "try again".
 4. The frontend parses the JSON, applies a `roundNumbers()` safety net to enforce 2dp on the final answer, and renders each section as a colored card with KaTeX-rendered math.
 5. Successful solutions are stored in `localStorage` so the user can revisit them instantly without spending another API call.
 

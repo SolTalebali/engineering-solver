@@ -39,8 +39,9 @@ Important rules:
 - When the problem has multiple final answers, label each value clearly in final_answer.value using the format "Label: value" separated by semicolons, e.g. "Net power output: 32.75; Thermal efficiency: 39.10; Heat input: 89.83". Do the same for units.
 - Do not include any text outside the JSON object.`;
 
-const MODEL_CHAIN = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
+const MODEL_CHAIN = ['gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-2.5-pro'];
 const RETRY_DELAYS = [2000, 5000, 10000]; // backoff between full-chain retries
+const RECOVERABLE_CODES = ['404', '429', '503'];
 
 async function tryModel(modelName, problem) {
   const model = genAI.getGenerativeModel({
@@ -49,6 +50,11 @@ async function tryModel(modelName, problem) {
   });
   const result = await model.generateContent(`${SYSTEM_PROMPT}\n\nProblem: ${problem}`);
   return JSON.parse(result.response.text());
+}
+
+function isRecoverable(err) {
+  const msg = err.message || '';
+  return RECOVERABLE_CODES.some(code => msg.includes(code));
 }
 
 async function solveEngineeringProblem(problem) {
@@ -63,8 +69,8 @@ async function solveEngineeringProblem(problem) {
         return solution;
       } catch (err) {
         lastError = err;
-        const is503 = err.message && err.message.includes('503');
-        if (!is503) throw err;
+        console.warn(`Model ${modelName} failed: ${err.message}`);
+        if (!isRecoverable(err)) throw err;
       }
     }
     if (attempt < RETRY_DELAYS.length) {
