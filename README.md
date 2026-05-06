@@ -1,4 +1,4 @@
-# Engineering Problem Solver
+# Rho — Engineering Problem Solver
 
 An AI-powered web app that solves mechanical engineering problems step by step. Describe a problem in plain English and get back a structured solution with formulas, worked calculations, rendered equations, and a physical explanation.
 

@@ -2,13 +2,36 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23161b22'/%3E%3Ctext x='50' y='78' text-anchor='middle' font-size='82' font-style='italic' font-family='Georgia,serif' font-weight='600' fill='%2300e5ff'%3E%CF%81%3C/text%3E%3C/svg%3E" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rho — Engineering Problem Solver</title>
+    <meta name="description" content="Rho is an AI-powered web app that solves mechanical engineering problems step by step. Plain-English in, structured solutions out — given values, formulas, step-by-step working, KaTeX-rendered LaTeX, and a physical explanation. Covers heat transfer, statics, fluid mechanics, thermodynamics, and dynamics." />
+    <meta name="keywords" content="engineering, mechanical engineering, problem solver, heat transfer, statics, fluid mechanics, thermodynamics, dynamics, LaTeX, Gemini" />
+    <meta name="author" content="Sol Talebali" />
+    <meta property="og:title" content="Rho — Engineering Problem Solver" />
+    <meta property="og:description" content="AI-powered solver for mechanical engineering problems. Plain-English in, step-by-step LaTeX-rendered solutions out." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://engineering-solver.vercel.app" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Rho — Engineering Problem Solver" />
+    <meta name="twitter:description" content="AI-powered solver for mechanical engineering problems." />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <title>Engineering Problem Solver</title>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <noscript>
+        <h1>Rho — Engineering Problem Solver</h1>
+        <p>An AI-powered web app for solving undergraduate mechanical engineering problems step by step.</p>
+        <h2>What it does</h2>
+        <p>Enter a problem in plain English (heat transfer, statics, fluid mechanics, thermodynamics, or dynamics). Rho returns a structured solution with given values, relevant formulas, step-by-step calculations, KaTeX-rendered LaTeX equations, a final answer, and a 2-3 sentence physical explanation.</p>
+        <h2>How it works</h2>
+        <p>Frontend: React + Vite, deployed on Vercel. Backend: Node + Express on Render, calling Google Gemini with a model fallback chain (gemini-2.5-flash → gemini-2.5-flash-lite → gemini-2.5-pro) and exponential-backoff retries on 404 / 429 / 503. Equations rendered with KaTeX. Solution history stored in localStorage.</p>
+        <h2>API</h2>
+        <p>POST https://engineering-solver-backend.onrender.com/solve with JSON body { "problem": "your problem in plain English" } returns a structured JSON solution.</p>
+        <h2>Source</h2>
+        <p>https://github.com/SolTalebali/engineering-solver</p>
+      </noscript>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

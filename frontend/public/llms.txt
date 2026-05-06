@@ -1,0 +1,48 @@
+# Rho — Engineering Problem Solver
+
+> An AI-powered web app that solves undergraduate mechanical engineering problems step by step. Plain-English in, structured solutions out.
+
+Rho takes a mechanical engineering problem in plain English (heat transfer, statics, fluid mechanics, thermodynamics, dynamics) and returns a structured solution: given values, formulas, step-by-step calculations, KaTeX-rendered LaTeX equations, a final answer, and a physical explanation.
+
+## Live URLs
+
+- App: https://engineering-solver.vercel.app
+- API: https://engineering-solver-backend.onrender.com/solve
+- Source: https://github.com/SolTalebali/engineering-solver
+
+## API
+
+`POST /solve`
+
+Request body:
+```json
+{ "problem": "A steel plate 10 mm thick with thermal conductivity 50 W/m·K has one side at 200 °C and the other at 50 °C. Find the heat flux." }
+```
+
+Response:
+```json
+{
+  "problem_type": "Heat Transfer",
+  "given_values": { "Thickness": "10 mm", "k": "50 W/m·K", "T1": "200 °C", "T2": "50 °C" },
+  "formulas": [{ "description": "Fourier's Law of Conduction", "latex": "q = -k \\frac{dT}{dx}" }],
+  "steps": [{ "step_number": 1, "description": "Compute the temperature gradient.", "latex": "..." }],
+  "final_answer": { "value": "750000", "units": "W/m²", "latex": "q = 7.5 \\times 10^5 \\text{ W/m}^2" },
+  "physical_explanation": "Heat flows from the hot side to the cold side proportionally to the temperature gradient and the material's thermal conductivity."
+}
+```
+
+CORS is open. No authentication. Free to call.
+
+## Stack
+
+- Frontend: React 18 + Vite, deployed on Vercel
+- Backend: Node.js + Express, deployed on Render
+- AI: Google Gemini (gemini-2.5-flash → gemini-2.5-flash-lite → gemini-2.5-pro fallback chain)
+- Equation rendering: KaTeX via `react-katex`
+- History: browser `localStorage`
+
+## Notes
+
+- Free Gemini tier — high-demand 503s and 429s do happen; the backend retries automatically, the frontend has a 20-second auto-retry countdown.
+- Out-of-scope questions (e.g. non-engineering) are detected and answered with just a Physical Explanation note.
+- Solutions are AI-generated; treat as a study aid and verify before relying on numerical answers.

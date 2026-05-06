@@ -193,8 +193,18 @@ function App() {
     if (textareaRef.current) textareaRef.current.style.height = 'auto'
   }
 
+  const isActive = !!(solution || loading || error)
+
   return (
     <div className="app">
+      <button
+        className={`rho-logo ${isActive ? 'rho-logo-top' : 'rho-logo-hero'}`}
+        onClick={handleHome}
+        aria-label="Home"
+        title={isActive ? 'Home' : undefined}
+      >
+        ρ
+      </button>
       <div className={`sidebar ${sidebarOpen ? 'sidebar-open' : ''}`}>
         <div className="sidebar-header">
           <span>History</span>
@@ -228,7 +238,7 @@ function App() {
       )}
 
       <div className="main-wrapper">
-        <div className="topbar">
+        <div className={`topbar ${isActive ? 'topbar-active' : ''}`}>
           <button
             className="history-toggle-btn"
             onClick={() => setSidebarOpen(o => !o)}
@@ -236,20 +246,12 @@ function App() {
           >
             ☰ History
           </button>
-          <button
-            className="history-toggle-btn home-btn"
-            onClick={handleHome}
-            aria-label="Home"
-          >
-            ⌂ Home
-          </button>
         </div>
 
         <div className="main">
           {!solution && !loading && !error && (
             <div className="hero">
-              <div className="hero-icon">⚙</div>
-              <h1>Engineering Problem Solver</h1>
+              <p className="hero-tagline">Engineering Problem Solver</p>
               <p className="hero-subtitle">Ask any heat transfer, statics, fluid mechanics, or thermodynamics problem.</p>
             </div>
           )}
