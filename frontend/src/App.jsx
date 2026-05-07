@@ -60,6 +60,7 @@ function App() {
   const [activeId, setActiveId] = useState(null)
   const [retryCountdown, setRetryCountdown] = useState(null)
   const [autoRetryFired, setAutoRetryFired] = useState(false)
+  const [shareCopied, setShareCopied] = useState(false)
   const textareaRef = useRef(null)
   const solutionRef = useRef(null)
   const submitRef = useRef(null)
@@ -182,6 +183,13 @@ function App() {
     textareaRef.current?.focus()
   }
 
+  function handleShare() {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      setShareCopied(true)
+      setTimeout(() => setShareCopied(false), 1500)
+    }).catch(() => {})
+  }
+
   function handleHome() {
     setProblem('')
     setSolution(null)
@@ -245,6 +253,13 @@ function App() {
             aria-label="Toggle history"
           >
             ☰ History
+          </button>
+          <button
+            className="history-toggle-btn share-btn"
+            onClick={handleShare}
+            aria-label="Copy share link"
+          >
+            {shareCopied ? '✓ Copied' : '🔗 Share'}
           </button>
         </div>
 

@@ -135,12 +135,13 @@ Response:
     { "description": "Fourier's Law of Conduction", "latex": "q = -k \\frac{dT}{dx}" }
   ],
   "steps": [
-    { "step_number": 1, "description": "Compute the temperature gradient.", "latex": "..." }
+    { "step_number": 1, "description": "Compute the temperature gradient across the plate.", "latex": "\\frac{dT}{dx} = \\frac{T_2 - T_1}{L} = \\frac{50 - 200}{0.01} = -15000 \\text{ K/m}" },
+    { "step_number": 2, "description": "Apply Fourier's Law to find the heat flux.", "latex": "q = -k \\frac{dT}{dx} = -50 \\times (-15000) = 750000 \\text{ W/m}^2" }
   ],
   "final_answer": {
     "value": "750000",
     "units": "W/m²",
-    "latex": "q = 7.5 \\times 10^5 \\text{ W/m}^2"
+    "latex": "q = 750000 \\text{ W/m}^2"
   },
   "physical_explanation": "..."
 }

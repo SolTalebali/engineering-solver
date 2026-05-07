@@ -1,5 +1,7 @@
 # Rho — Engineering Problem Solver
 
+Author: Sol Talebali (https://github.com/SolTalebali)
+
 > An AI-powered web app that solves undergraduate mechanical engineering problems step by step. Plain-English in, structured solutions out.
 
 Rho takes a mechanical engineering problem in plain English (heat transfer, statics, fluid mechanics, thermodynamics, dynamics) and returns a structured solution: given values, formulas, step-by-step calculations, KaTeX-rendered LaTeX equations, a final answer, and a physical explanation.
@@ -25,8 +27,11 @@ Response:
   "problem_type": "Heat Transfer",
   "given_values": { "Thickness": "10 mm", "k": "50 W/m·K", "T1": "200 °C", "T2": "50 °C" },
   "formulas": [{ "description": "Fourier's Law of Conduction", "latex": "q = -k \\frac{dT}{dx}" }],
-  "steps": [{ "step_number": 1, "description": "Compute the temperature gradient.", "latex": "..." }],
-  "final_answer": { "value": "750000", "units": "W/m²", "latex": "q = 7.5 \\times 10^5 \\text{ W/m}^2" },
+  "steps": [
+    { "step_number": 1, "description": "Compute the temperature gradient across the plate.", "latex": "\\frac{dT}{dx} = \\frac{T_2 - T_1}{L} = \\frac{50 - 200}{0.01} = -15000 \\text{ K/m}" },
+    { "step_number": 2, "description": "Apply Fourier's Law to find the heat flux.", "latex": "q = -k \\frac{dT}{dx} = -50 \\times (-15000) = 750000 \\text{ W/m}^2" }
+  ],
+  "final_answer": { "value": "750000", "units": "W/m²", "latex": "q = 750000 \\text{ W/m}^2" },
   "physical_explanation": "Heat flows from the hot side to the cold side proportionally to the temperature gradient and the material's thermal conductivity."
 }
 ```

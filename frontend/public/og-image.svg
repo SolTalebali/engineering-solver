@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0d1117"/>
+      <stop offset="100%" stop-color="#161b22"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Decorative formula in background -->
+  <text x="600" y="380" text-anchor="middle"
+        font-family="Times New Roman, Georgia, serif" font-style="italic"
+        font-size="160" fill="#1e3a5f" opacity="0.45">
+    q = -k ∇T
+  </text>
+
+  <!-- Rho logo box -->
+  <rect x="140" y="195" width="240" height="240" rx="40"
+        fill="#161b22" stroke="#00e5ff" stroke-width="3"/>
+  <text x="260" y="395" text-anchor="middle"
+        font-family="Times New Roman, Georgia, serif" font-style="italic" font-weight="600"
+        font-size="280" fill="#00e5ff">ρ</text>
+
+  <!-- Title -->
+  <text x="430" y="290"
+        font-family="Inter, Helvetica, Arial, sans-serif" font-weight="700"
+        font-size="120" fill="#f1f5f9" letter-spacing="-2">Rho</text>
+
+  <!-- Tagline (uppercase, neon) -->
+  <text x="430" y="340"
+        font-family="Inter, Helvetica, Arial, sans-serif" font-weight="500"
+        font-size="28" fill="#00e5ff" letter-spacing="6">ENGINEERING PROBLEM SOLVER</text>
+
+  <!-- Subtitle -->
+  <text x="430" y="420"
+        font-family="Inter, Helvetica, Arial, sans-serif" font-weight="400"
+        font-size="28" fill="#94a3b8">AI-powered solutions with formulas,</text>
+  <text x="430" y="458"
+        font-family="Inter, Helvetica, Arial, sans-serif" font-weight="400"
+        font-size="28" fill="#94a3b8">step-by-step working, and rendered LaTeX.</text>
+
+  <!-- Footer URL -->
+  <text x="600" y="580" text-anchor="middle"
+        font-family="Inter, Helvetica, Arial, sans-serif" font-weight="400"
+        font-size="22" fill="#475569">rho-engineering.vercel.app</text>
+</svg>
