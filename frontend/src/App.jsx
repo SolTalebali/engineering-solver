@@ -357,7 +357,7 @@ function App() {
           )}
         </div>
 
-        <div className="input-area">
+        <div className={`input-area ${!isActive ? 'input-area-hero' : ''}`}>
           <form className="input-bar" onSubmit={handleSubmit}>
             <textarea
               ref={textareaRef}

@@ -54,7 +54,7 @@ History side bar:
 | Frontend | React + Vite |
 | Equation Rendering | KaTeX (via `react-katex`) |
 | Backend | Node.js + Express |
-| AI | Google Gemini 2.5 Flash |
+| AI | Google Gemini (2.5 Flash → 2.5 Flash-Lite → 2.5 Pro fallback chain) |
 | Frontend Hosting | Vercel |
 | Backend Hosting | Render |
 
@@ -119,6 +119,14 @@ App runs at `http://localhost:5173`.
 
 **POST** `/solve`
 
+CORS is open and there's no auth — feel free to call it directly.
+
+```bash
+curl -X POST https://engineering-solver-backend.onrender.com/solve \
+  -H "Content-Type: application/json" \
+  -d '{"problem":"A steel plate 10 mm thick with thermal conductivity 50 W/m·K has one side at 200 °C and the other at 50 °C. Find the heat flux."}'
+```
+
 Request:
 ```json
 {
@@ -152,9 +160,24 @@ Response:
 }
 ```
 
+## AI Discovery
+
+Rho is built to be readable by AI agents and crawlers, not just humans:
+
+- **`/llms.txt`** — markdown summary of the project at [rho-engineering.vercel.app/llms.txt](https://rho-engineering.vercel.app/llms.txt), following the emerging convention for LLM-friendly site discovery.
+- **`<noscript>` fallback** in the HTML body so HTTP fetchers without JavaScript see the project description, API docs, and source link instead of an empty `<div>`.
+- **Open Graph + Twitter card metadata** with a `1200×630` OG image so shared links render with a proper preview on Discord, Slack, LinkedIn, etc.
+- **CORS-open `/solve` endpoint** with no auth, so any agent or script can call it directly.
+
+Paste the live URL into Claude or ChatGPT and ask for feedback — the meta + noscript content gives them enough to engage meaningfully with one fetch.
+
 ## Notes & Limitations
 
 - The deployed backend uses Gemini's free tier, so high-demand 503 errors do happen during peak hours despite the retry logic. Trying again a moment later usually succeeds.
 - Solutions are AI-generated and best treated as a study aid — sanity-check the formulas and numerical answers against your own work before relying on them.
 - The app is targeted at undergraduate-level mechanical engineering problems. Out-of-scope questions (e.g. "solve world hunger") are detected and answered with just a Physical Explanation note.
 - Chat history is stored in `localStorage` only — it is not synced across devices and clearing browser data wipes it.
+
+## License
+
+MIT — see [LICENSE](./LICENSE).
