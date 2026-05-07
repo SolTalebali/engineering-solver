@@ -24,7 +24,7 @@
 }
 
 .topbar-active {
-  padding-left: calc(36px + 1.5rem);
+  /* logo is centered at top, no extra padding needed */
 }
 
 .history-toggle-btn {
@@ -57,7 +57,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 2rem 1.5rem 1rem;
+  padding: 4rem 1.5rem 1rem;
 }
 
 /* Sidebar */
@@ -199,12 +199,12 @@
 .hero {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
   flex: 1;
   text-align: center;
-  gap: 0.9rem;
-  padding-top: calc(22vh + 96px - 32px);
-  padding-bottom: 4rem;
+  gap: 0.7rem;
+  padding: 1rem 0;
 }
 
 .rho-logo {
@@ -234,29 +234,16 @@
     padding 0.55s cubic-bezier(0.65, 0, 0.35, 1);
 }
 
-.rho-logo-hero {
-  top: 22vh;
+.rho-logo-top {
+  top: 10px;
   left: 50%;
   transform: translateX(-50%);
-  width: 96px;
-  height: 96px;
-  font-size: 7.5rem;
+  width: 76px;
+  height: 76px;
+  font-size: 5.8rem;
   line-height: 0.9;
-  border-radius: 22px;
-  padding: 0 0 1.5rem 0;
-  overflow: hidden;
-}
-
-.rho-logo-top {
-  top: 7px;
-  left: 1rem;
-  transform: translateX(0);
-  width: 36px;
-  height: 36px;
-  font-size: 2.7rem;
-  line-height: 0.9;
-  border-radius: 8px;
-  padding: 0 0 0.5rem 0;
+  border-radius: 18px;
+  padding: 0 0 1.15rem 0;
   overflow: hidden;
 }
 
@@ -420,8 +407,14 @@ li { margin-bottom: 0.35rem; font-size: 0.95rem; color: #e2e8f0; }
 }
 
 .input-area-hero {
-  margin-bottom: 28vh;
+  margin-bottom: 14vh;
   border-top: none;
+}
+
+@media (max-height: 520px) {
+  .input-area-hero {
+    margin-bottom: 4vh;
+  }
 }
 
 .input-bar {
