@@ -23,7 +23,6 @@ A worked Cantilever beam problem:
 
 <p align="center">
   <img src="./docs/screenshots/02-solution.png" width="49%" alt="Solved problem" />
-  <img src="./docs/screenshots/03-history.png" width="49%" alt="History sidebar" />
 </p>
 
 History side bar: 
