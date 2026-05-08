@@ -206,10 +206,10 @@ function App() {
   return (
     <div className="app">
       <button
-        className="rho-logo rho-logo-top"
+        className={`rho-logo ${isActive ? 'rho-logo-top' : 'rho-logo-hero'}`}
         onClick={handleHome}
         aria-label="Home"
-        title="Home"
+        title={isActive ? 'Home' : undefined}
       >
         ρ
       </button>
@@ -246,7 +246,7 @@ function App() {
       )}
 
       <div className="main-wrapper">
-        <div className="topbar topbar-active">
+        <div className={`topbar ${isActive ? 'topbar-active' : ''}`}>
           <button
             className="history-toggle-btn"
             onClick={() => setSidebarOpen(o => !o)}
