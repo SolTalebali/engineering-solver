@@ -236,6 +236,7 @@
 
 .rho-logo-hero {
   top: 14vh;
+  top: 14dvh;
   left: 50%;
   transform: translateX(-50%);
   width: 96px;
@@ -427,6 +428,7 @@ li { margin-bottom: 0.35rem; font-size: 0.95rem; color: #e2e8f0; }
 @media (max-height: 700px) {
   .rho-logo-hero {
     top: 8vh;
+    top: 8dvh;
     width: 80px;
     height: 80px;
     font-size: 6.2rem;
@@ -445,6 +447,7 @@ li { margin-bottom: 0.35rem; font-size: 0.95rem; color: #e2e8f0; }
 @media (max-height: 520px) {
   .rho-logo-hero {
     top: 4vh;
+    top: 4dvh;
     width: 64px;
     height: 64px;
     font-size: 4.8rem;
