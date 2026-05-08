@@ -469,6 +469,12 @@ li { margin-bottom: 0.35rem; font-size: 0.95rem; color: #e2e8f0; }
   }
 }
 
+@media (min-width: 768px) and (min-height: 700px) {
+  .input-area-hero {
+    margin-bottom: 22vh;
+  }
+}
+
 .input-bar {
   display: flex;
   align-items: center;
